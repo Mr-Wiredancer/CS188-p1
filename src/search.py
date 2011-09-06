@@ -211,7 +211,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         
         successors = problem.getSuccessors(currentState)
         for successor, action, stepCost in successors:
-            toBeExpanded.push((successor,currentMoves+[action],currentCost+stepCost+heuristic(successor,problem)),currentCost+stepCost+heuristic(successor,problem))
+            toBeExpanded.push((successor,currentMoves+[action],currentCost+stepCost),currentCost+stepCost+heuristic(successor,problem))
         
     return []
     

@@ -281,7 +281,7 @@ class CornersProblem(search.SearchProblem):
     def getStartState(self):
         "Returns the start state (in your state space, not the full Pacman state space)"
         "*** YOUR CODE HERE ***"
-        return (self.startingPosition,self.corners)
+        return (self.startingPosition,(0,1,2,3))
 #        util.raiseNotDefined()
 
     def isGoalState(self, state):
@@ -312,7 +312,38 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+            x,y = state[0]
+            cornersLeft = state[1]
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            if not self.walls[nextx][nexty]:
+                nextPos = (nextx, nexty)
+                try:
+                    index = self.corners.index(nextPos)
+                except:
+                    """nextPos is not a corner"""
+                    index = -1
+                """if index is negative, it wont be in cornersLeft"""
+                if index in cornersLeft:
+                    temp = list(cornersLeft)
+                    temp.remove(index)
+                    newCornersLeft = tuple(temp)
+                else:
+                    newCornersLeft = cornersLeft
+                nextState = (nextPos,newCornersLeft)    
+#                if nextPos in slef.corners and self.corners:
+#                    nextState = (nextPos, corners.remove(nextPos))
+#                else:    
+#                    nextState = (nextPos, corners)                    
+#                cost = self.costFn(nextState)
+                cost=1
+                successors.append( ( nextState, action, cost) )
 
+        # Bookkeeping for display purposes
+#        self._expanded += 1
+#        if state not in self._visited:
+#            self._visited[state] = True
+#            self._visitedlist.append(state)
         self._expanded += 1
         return successors
 
