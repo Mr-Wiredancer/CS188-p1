@@ -380,23 +380,25 @@ def cornersHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     currentX,currentY = state[0]
     cornersInd = state[1]
+    
+    """goal state"""
     if not cornersInd:
         return 0
+    
+    """get the distance to closest corner"""
     cornersLeftCoord =map(lambda x:corners[x], cornersInd)
-#    distanceToCorners = map(lambda x:pow(pow(x[1]-currentY,2)+pow(x[0]-currentX,2),0.5),cornersLeftCoord)
     distanceToCorners = map(lambda x:abs(x[1]-currentY)+abs(x[0]-currentX),cornersLeftCoord)
     closestDist = min(distanceToCorners)
-    closestCorner = cornersLeftCoord[(distanceToCorners.index(closestDist))]
+    
     count = len(cornersInd)
     if ( count == 4 ):
         return closestDist + problem.walls.height*2-4+problem.walls.width-2
     elif ( count == 3 ):
-        """closest point is the middle of the three"""
         return closestDist + problem.walls.height + problem.walls.width
     elif (count == 2):
         return closestDist + abs(cornersLeftCoord[1][1]-cornersLeftCoord[0][1]) + abs(cornersLeftCoord[1][0]-cornersLeftCoord[0][0])    
     else:
-        return closestDist # Default to trivial solution
+        return closestDist
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -487,7 +489,16 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    
+    currentX,currentY = position
+    foods = foodGrid.asList()
+    
+    if not foods:
+        return 0
+    
+    distanceToFoods = map(lambda x:abs(x[1]-currentY)+abs(x[0]-currentX),foods)
+    closestDist = min(distanceToFoods)
+    return len(foods)+closestDist-1
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -515,7 +526,8 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return search.bfs(problem)
+#        util.raiseNotDefined()
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -536,7 +548,6 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         "Stores information from the gameState.  You don't need to change this."
         # Store the food for later reference
         self.food = gameState.getFood()
-
         # Store info for the PositionSearchProblem (no need to change this)
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition()
@@ -551,7 +562,8 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return state in self.food.asList()
+#        util.raiseNotDefined()
 
 ##################
 # Mini-contest 1 #
