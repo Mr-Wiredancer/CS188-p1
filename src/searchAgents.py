@@ -5,7 +5,7 @@
 # purposes. The Pacman AI projects were developed at UC Berkeley, primarily by
 # John DeNero (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
 # For more info, see http://inst.eecs.berkeley.edu/~cs188/sp09/pacman.html
-
+"""from li's windows"""
 """
 This file contains all of the agents that can be selected to
 control Pacman.  To select an agent, use the '-p' option
