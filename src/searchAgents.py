@@ -34,6 +34,7 @@ import util
 import time
 import search
 import searchAgents
+import sys
 
 class GoWestAgent(Agent):
     "An agent that goes West until it can't."
@@ -490,15 +491,36 @@ def foodHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     
     """comment"""
+    try:
+        problem.heuristicInfo['dist']
+    except:
+        problem.heuristicInfo['dist']=dict()
+        problem.heuristicInfo['count']=0
     currentX,currentY = position
     foods = foodGrid.asList()
     
     if not foods:
         return 0
-    
-    distanceToFoods = map(lambda x:abs(x[1]-currentY)+abs(x[0]-currentX),foods)
+    def getDist(x):
+#        print problem.heuristicInfo['dist']
+        if tuple(list(position)+list(x)) in problem.heuristicInfo['dist'].keys():
+            problem.heuristicInfo['count']+=1
+#            print problem.heuristicInfo['count']
+            return problem.heuristicInfo['dist'][tuple(list(position)+list(x))]
+        else:
+            dist = mazeDistance(position, x, problem.startingGameState)
+            problem.heuristicInfo['dist'][tuple(list(position)+list(x))]=dist
+            return dist                           
+    distanceToFoods = map(getDist, foods)
+#    distanceToFoods = map(lambda x:abs(x[1]-currentY)+abs(x[0]-currentX),foods)
     closestDist = min(distanceToFoods)
-    return len(foods)+closestDist-1
+    farthestDist = max(distanceToFoods)
+#    print distanceToFoods
+#    sys.exit(0)
+#    return len(foods)+closestDist-1
+#    print farthestDist
+
+    return farthestDist
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
