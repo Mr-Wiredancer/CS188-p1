@@ -378,27 +378,29 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    currentX,currentY = state[0]
-    cornersInd = state[1]
-    
-    """goal state"""
-    if not cornersInd:
-        return 0
-    
-    """get the distance to closest corner"""
-    cornersLeftCoord =map(lambda x:corners[x], cornersInd)
-    distanceToCorners = map(lambda x:abs(x[1]-currentY)+abs(x[0]-currentX),cornersLeftCoord)
-    closestDist = min(distanceToCorners)
-    
-    count = len(cornersInd)
-    if ( count == 4 ):
-        return closestDist + problem.walls.height*2-4+problem.walls.width-2
-    elif ( count == 3 ):
-        return closestDist + problem.walls.height + problem.walls.width
-    elif (count == 2):
-        return closestDist + abs(cornersLeftCoord[1][1]-cornersLeftCoord[0][1]) + abs(cornersLeftCoord[1][0]-cornersLeftCoord[0][0])    
-    else:
-        return closestDist
+#    currentX,currentY = state[0]
+#    cornersInd = state[1]
+#    
+#    """goal state"""
+#    if not cornersInd:
+#        return 0
+#    
+#    """get the distance to closest corner"""
+#    cornersLeftCoord =map(lambda x:corners[x], cornersInd)
+##    distanceToCorners = map(lambda x:abs(x[1]-currentY)+abs(x[0]-currentX),cornersLeftCoord)
+#    distanceToCorners = map(lambda x: mazeDistance(state[0], x, problem.getStartState()), cornersLeftCoord);
+#    closestDist = min(distanceToCorners)
+#    
+#    count = len(cornersInd)
+#    if ( count == 4 ):
+#        return closestDist + problem.walls.height*2-4+problem.walls.width-2
+#    elif ( count == 3 ):
+#        return closestDist + problem.walls.height + problem.walls.width
+#    elif (count == 2):
+#        return closestDist + abs(cornersLeftCoord[1][1]-cornersLeftCoord[0][1]) + abs(cornersLeftCoord[1][0]-cornersLeftCoord[0][0])    
+#    else:
+#        return closestDist
+    return len(state[1])
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"

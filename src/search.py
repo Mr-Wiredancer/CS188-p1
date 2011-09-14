@@ -87,27 +87,30 @@ def depthFirstSearch(problem):
     
     toBeExpanded = util.Stack()
     toBeExpanded.push((problem.getStartState(),[]))
-                      
-    alreadyExpanded = set()
     
+    alreadyExpanded = set()
+        
     while not toBeExpanded.isEmpty():
         current = toBeExpanded.pop()
-        
         currentState = current[0]
         currentMoves = current[1]
-        
-        if currentState in alreadyExpanded:
+                
+        """dont expand if the state was already expanded"""
+        if(currentState in alreadyExpanded):
             continue
+    
         alreadyExpanded.add(currentState)
         
+        """if the state is goal state, then task finished"""
         if problem.isGoalState(currentState):
             return currentMoves
         
         successors = problem.getSuccessors(currentState)
         for successor, action, stepCost in successors:
             toBeExpanded.push((successor,currentMoves+[action]))
-
-        return []
+            
+    """solution not found"""        
+    return []
 #    util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
