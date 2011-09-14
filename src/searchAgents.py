@@ -277,6 +277,8 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0 # Number of search nodes expanded
 
         "*** YOUR CODE HERE ***"
+        self.startGameState = startingGameState
+        self.info = dict()
 
     def getStartState(self):
         "Returns the start state (in your state space, not the full Pacman state space)"
@@ -379,28 +381,84 @@ def cornersHeuristic(state, problem):
 
     "*** YOUR CODE HERE ***"
 #    currentX,currentY = state[0]
-#    cornersInd = state[1]
+    position = state[0]
+    cornersInd = state[1]
 #    
 #    """goal state"""
-#    if not cornersInd:
-#        return 0
+    if not cornersInd:
+        return 0
 #    
 #    """get the distance to closest corner"""
-#    cornersLeftCoord =map(lambda x:corners[x], cornersInd)
+    cornersLeftCoord =map(lambda x:corners[x], cornersInd)
 ##    distanceToCorners = map(lambda x:abs(x[1]-currentY)+abs(x[0]-currentX),cornersLeftCoord)
-#    distanceToCorners = map(lambda x: mazeDistance(state[0], x, problem.getStartState()), cornersLeftCoord);
-#    closestDist = min(distanceToCorners)
+#    distanceToCorners = map(lambda x: mazeDistance(state[0], x, problem.startGameState), cornersLeftCoord);
+    def getDist(x):
+#        print problem.heuristicInfo['dist']
+        if tuple(list(position)+list(x)) in problem.info.keys():
+#            problem.info['count']+=1
+#            print problem.heuristicInfo['count']
+            return problem.info[tuple(list(position)+list(x))]
+        else:
+            dist = mazeDistance(position, x, problem.startGameState)
+            problem.info[tuple(list(position)+list(x))]=dist
+            return dist                           
+    distanceToCorners = map(getDist, cornersLeftCoord)
+    farthest = max(distanceToCorners)
 #    
-#    count = len(cornersInd)
-#    if ( count == 4 ):
-#        return closestDist + problem.walls.height*2-4+problem.walls.width-2
-#    elif ( count == 3 ):
-#        return closestDist + problem.walls.height + problem.walls.width
-#    elif (count == 2):
-#        return closestDist + abs(cornersLeftCoord[1][1]-cornersLeftCoord[0][1]) + abs(cornersLeftCoord[1][0]-cornersLeftCoord[0][0])    
-#    else:
-#        return closestDist
-    return len(state[1])
+    return farthest
+
+
+def cornersHeuristic2(state, problem):
+    """
+    A heuristic for the CornersProblem that you defined.
+
+      state:   The current search state
+               (a data structure you chose in your search problem)
+
+      problem: The CornersProblem instance for this layout.
+
+    This function should always return a number that is a lower bound
+    on the shortest path from the state to a goal of the problem; i.e.
+    it should be admissible (as well as consistent).
+    """
+    corners = problem.corners # These are the corner coordinates
+    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+
+    "*** YOUR CODE HERE ***"
+#    currentX,currentY = state[0]
+    position = state[0]
+    cornersInd = state[1]
+#    
+#    """goal state"""
+    if not cornersInd:
+        return 0
+#    
+#    """get the distance to closest corner"""
+    cornersLeftCoord =map(lambda x:corners[x], cornersInd)
+##    distanceToCorners = map(lambda x:abs(x[1]-currentY)+abs(x[0]-currentX),cornersLeftCoord)
+#    distanceToCorners = map(lambda x: mazeDistance(state[0], x, problem.startGameState), cornersLeftCoord);
+    def getDist(x):
+#        print problem.heuristicInfo['dist']
+        if tuple(list(position)+list(x)) in problem.info.keys():
+#            problem.info['count']+=1
+#            print problem.heuristicInfo['count']
+            return problem.info[tuple(list(position)+list(x))]
+        else:
+            dist = mazeDistance(position, x, problem.startGameState)
+            problem.info[tuple(list(position)+list(x))]=dist
+            return dist                           
+    distanceToCorners = map(getDist, cornersLeftCoord)
+    closestDist = min(distanceToCorners)
+#    
+    count = len(cornersInd)
+    if ( count == 4 ):
+        return closestDist + problem.walls.height*2-4+problem.walls.width-2
+    elif ( count == 3 ):
+        return closestDist + problem.walls.height + problem.walls.width
+    elif (count == 2):
+        return closestDist + abs(cornersLeftCoord[1][1]-cornersLeftCoord[0][1]) + abs(cornersLeftCoord[1][0]-cornersLeftCoord[0][0])    
+    else:
+        return closestDist
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
